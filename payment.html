@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Payment Page</title>
+</head>
+<body>
+  <h2>Proceeding to Payment</h2>
+  <p id="summary"></p>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+    const qty = params.get("qty");
+
+    document.getElementById("summary").innerText =
+      `You are buying product ID: ${id} with quantity: ${qty}`;
+  </script>
+</body>
+</html>

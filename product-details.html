@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dynamic Product Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #fff;
+      color: #333;
+      padding: 30px;
+    }
+
+    .container {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .image-container {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .image-container img {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    .details-container {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .product-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .price {
+      font-size: 20px;
+      margin: 10px 0;
+    }
+
+    .price del {
+      color: #888;
+      margin-right: 10px;
+    }
+
+    .stock {
+      color: green;
+      font-weight: 600;
+      margin: 10px 0;
+    }
+
+    .sizes, .quantity {
+      margin: 20px 0;
+    }
+
+    .sizes button, .quantity button {
+      padding: 10px 15px;
+      margin: 5px;
+      border: 1px solid #ccc;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .sizes button.active {
+      background: #333;
+      color: #fff;
+    }
+
+    .actions button {
+      padding: 15px 20px;
+      margin-right: 10px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .actions .add-cart {
+      background: #eee;
+    }
+
+    .actions .buy-now {
+      background: #000;
+      color: #fff;
+    }
+
+    .security, .description {
+      margin-top: 30px;
+    }
+
+    .description ul {
+      margin-left: 20px;
+    }
+
+    .footer-note {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body onload="loadProduct()">
+
+<div class="container">
+  <div class="image-container">
+    <img id="product-image" src="" alt="Product Image">
+  </div>
+  <div class="details-container">
+    <div class="product-title" id="product-title"></div>
+    <div class="price">
+      <del id="product-original-price"></del> <span id="product-price"></span>
+    </div>
+    <div class="stock" id="stock-status"></div>
+
+    <div class="sizes">
+      <div><strong>Shoe size:</strong></div>
+      <div id="size-options"></div>
+    </div>
+
+    <div class="quantity">
+      <div><strong>Quantity:</strong></div>
+      <button onclick="decreaseQty()">-</button>
+      <span id="qty">1</span>
+      <button onclick="increaseQty()">+</button>
+    </div>
+
+    <div class="actions">
+      <button class="add-cart" onclick="addToCart()">Add to cart</button>
+      <button class="buy-now" onclick="buyNow()">Buy it now</button>
+    </div>
+
+    <div class="security">
+      <p><strong>Payment & Security</strong></p>
+      <p>Secure and trusted checkout. We do not store payment details or share your data.</p>
+    </div>
+
+    <div class="description">
+      <p id="product-description"></p>
+      <br>
+      <strong>Key Features:</strong>
+      <ul id="product-features"></ul>
+    </div>
+
+    <div class="footer-note">
+      © 2025 Chicloom. All rights reserved.
+    </div>
+  </div>
+</div>
+
+<script>
+  const products = {
+    101: {
+      title: "Casual T-Shirt",
+      image: "images/product1.jpg",
+      originalPrice: "₹1,899.00",
+      currentPrice: "₹699.00",
+      inStock: true,
+      sizes: [6, 7, 8, 9],
+      description: "Stylish sporty sneakers for casual wear.",
+      features: [
+        "Premium Synthetic Upper: Durable and easy to clean.",
+        "Comfortable Padded Collar: Supportive and cushioned.",
+        "Classic Lace-Up Design: Adjustable and secure fit.",
+        "Durable Rubber Outsole: Excellent grip."
+      ]
+    },
+    102: {
+      title: "Shirt",
+      image: "images/product2.jpg",
+      originalPrice: "₹2,499.00",
+      currentPrice: "₹1,299.00",
+      inStock: false,
+      sizes: [7, 8, 9, 10],
+      description: "Elegant leather shoes for office and events.",
+      features: [
+        "Genuine Leather Finish",
+        "Soft Inner Lining",
+        "Classic Formal Design",
+        "Durable Sole for Long Wear"
+      ]
+    },
+    103: {
+      title: "T-Shirt2",
+      image: "images/product3.jpg",
+      originalPrice: "₹2,499.00",
+      currentPrice: "₹1,299.00",
+      inStock: false,
+      sizes: [7, 8, 9, 10],
+      description: "Elegant leather shoes for office and events.",
+      features: [
+        "Genuine Leather Finish",
+        "Soft Inner Lining",
+        "Classic Formal Design",
+        "Durable Sole for Long Wear"
+      ]
+    },
+    104: {
+      title: "T-Shirt3",
+      image: "images/product4.jpg",
+      originalPrice: "₹2,499.00",
+      currentPrice: "₹1,299.00",
+      inStock: false,
+      sizes: [7, 8, 9, 10],
+      description: "Elegant leather shoes for office and events.",
+      features: [
+        "Genuine Leather Finish",
+        "Soft Inner Lining",
+        "Classic Formal Design",
+        "Durable Sole for Long Wear"
+      ]
+    },
+    105: {
+      title: "T-Shirt4",
+      image: "images/product5.jpg",
+      originalPrice: "₹2,499.00",
+      currentPrice: "₹1,299.00",
+      inStock: false,
+      sizes: [7, 8, 9, 10],
+      description: "Elegant leather shoes for office and events.",
+      features: [
+        "Genuine Leather Finish",
+        "Soft Inner Lining",
+        "Classic Formal Design",
+        "Durable Sole for Long Wear"
+      ]
+    }
+  };
+
+  function getProductIdFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("id") || "101";
+  }
+
+  function loadProduct() {
+    const productId = getProductIdFromURL();
+    const product = products[productId];
+
+    if (!product) {
+      document.body.innerHTML = "<h2>Product not found!</h2>";
+      return;
+    }
+
+    document.getElementById("product-title").innerText = product.title;
+    document.getElementById("product-image").src = product.image;
+    document.getElementById("product-original-price").innerText = product.originalPrice;
+    document.getElementById("product-price").innerText = product.currentPrice;
+    document.getElementById("stock-status").innerText = product.inStock ? "✅ In stock" : "❌ Out of stock";
+    document.getElementById("product-description").innerText = product.description;
+
+    const featuresList = document.getElementById("product-features");
+    featuresList.innerHTML = "";
+    product.features.forEach(f => {
+      const li = document.createElement("li");
+      li.innerText = f;
+      featuresList.appendChild(li);
+    });
+
+    const sizeOptions = document.getElementById("size-options");
+    sizeOptions.innerHTML = "";
+    product.sizes.forEach((size, i) => {
+      const btn = document.createElement("button");
+      btn.innerText = size;
+      btn.onclick = () => {
+        document.querySelectorAll("#size-options button").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+      };
+      if (i === 0) btn.classList.add("active");
+      sizeOptions.appendChild(btn);
+    });
+  }
+
+  let quantity = 1;
+  function increaseQty() {
+    quantity++;
+    document.getElementById("qty").innerText = quantity;
+  }
+
+  function decreaseQty() {
+    if (quantity > 1) {
+      quantity--;
+      document.getElementById("qty").innerText = quantity;
+    }
+  }
+
+  function addToCart() {
+    const productId = getProductIdFromURL();
+    const qty = quantity;
+    const product = products[productId];
+
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    const existing = cart.find(item => item.id == productId);
+    if (existing) {
+      existing.qty += qty;
+    } else {
+      cart.push({
+        id: productId,
+        title: product.title,
+        image: product.image,
+        price: product.currentPrice.replace(/[₹,]/g, ''),
+        qty: qty
+      });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartCount();
+    alert("✅ Product added to cart!");
+  }
+
+  function buyNow() {
+    const productId = getProductIdFromURL();
+    const qty = quantity;
+
+    fetch(`http://localhost:5000/api/products/${productId}`)
+      .then(res => res.json())
+      .then(product => {
+        if (product.error) {
+          alert("Product not found.");
+          return;
+        }
+
+        // Add quantity
+        product.quantity = qty;
+
+        // Save to database
+        fetch("http://localhost:5000/api/orders", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(product)
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.message) {
+            console.log("✅ Order saved in DB:", data);
+            // Store locally for payment
+            localStorage.setItem("checkoutProduct", JSON.stringify(product));
+            window.location.href = "payment.html";
+          } else {
+            alert("Order creation failed.");
+          }
+        });
+      })
+      .catch(err => {
+        console.error("Error:", err);
+        alert("Something went wrong. Please try again.");
+      });
+  }
+
+</script>
+
+</body>
+</html>

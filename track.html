@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Track Your Order - Mrshop</title>
+  <link rel="stylesheet" href="track.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Top bar -->
+  <div class="top-bar">
+    <div class="social-icons">
+      <a href="#"><i class="fab fa-facebook-f"></i></a>
+      <a href="#"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-youtube"></i></a>
+      <a href="#"><i class="fab fa-tiktok"></i></a>
+      <a href="#"><i class="fas fa-x"></i></a>
+    </div>
+    <div>Welcome to our store</div>
+    <div></div> <!-- Empty div to balance flex -->
+  </div>
+
+  <!-- Main header -->
+  <div class="main-header">
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="catelog.html">Catalog</a>
+      <a href="contact.html">Contact</a>
+      <a href="track.html">Track Your Order</a>
+    </div>
+
+    <div class="logo">Mrshop</div>
+
+    <div class="icons">
+      <i class="fas fa-search"></i>
+      <i class="far fa-heart"><span class="badge">0</span></i>
+      <i class="fas fa-paper-plane"><span class="badge">0</span></i>
+      <a href="login.html"><i class="far fa-user"></i></a>
+      <a href="cart.html"><i class="fas fa-shopping-cart"><span id="cart-count" class="badge">0</span></i></a>
+    </div>
+  </div>
+
+  <!-- Track Order Form Below -->
+  <div class="container">
+    <h1>Track Your Order</h1>
+    <p>Enter your Order ID and email to check your delivery status.</p>
+    <form id="trackForm">
+      <input type="text" id="orderId" placeholder="Order ID" required>
+      <input type="email" id="email" placeholder="Email Address" required>
+      <button type="submit">Track</button>
+    </form>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    document.getElementById('trackForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const orderId = document.getElementById('orderId').value;
+      const email = document.getElementById('email').value;
+      const resultBox = document.getElementById('result');
+
+      // Dummy tracking logic
+      if (orderId === "ORD123" && email === "test@example.com") {
+        resultBox.innerText = "✅ Your order is being shipped!";
+      } else {
+        resultBox.innerText = "❌ Order not found. Please check your details.";
+      }
+    });
+  </script>
+
+</body>
+</html>
